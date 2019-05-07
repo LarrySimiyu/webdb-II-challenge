@@ -4,7 +4,6 @@ const server = express();
 
 
 
-const router = require('express').Router();
 const knex = require('knex');
 
 const knexConfig = {
@@ -15,17 +14,21 @@ const knexConfig = {
   },
   debug: true,
 };
-const db = knex(knexConfig);
+
 //teaches knex how to find our dataBase
+const db = knex(knexConfig);
 
 server.use(express.json());
 server.use(helmet());
 
-// endpoints here
+// error.message
+// when you do everything in index write the exact path
+// if using a router do it differently ----
 
-server.get('/', (req, res) => {
+// endpoints here
+server.get('/api/zoos', (req, res) => {
   db('zoos') //returns a promise that resolves to all records in the tables 
-    // then and catch are the bros to get to the actual data 
+    // [then and catch] are the bros to get to the actual data 
     .then(zoos => {
       res.status(200).json(zoos); // if there were no errors this happens 
     })
@@ -37,8 +40,7 @@ server.get('/', (req, res) => {
 
 
 // get id 
-
-server.get('/:id', (req, res) => {
+server.get('/api/zoos/:id', (req, res) => {
   const { id } = req.params;
   db('roles')
     .where({ id })
@@ -53,7 +55,7 @@ server.get('/:id', (req, res) => {
 
 // put
 
-server.put('/:id', (req, res) => {
+server.put('/api/zoos/:id', (req, res) => {
   db('zoos')
     .where({ id: req.params.id })
     .update(req.body)
@@ -72,7 +74,7 @@ server.put('/:id', (req, res) => {
 
 //delete
 
-server.delete('/:id', (req, res) => {
+server.delete('/api/zoos/:id', (req, res) => {
   db('zoos')
     .where({ id: req.params.id })
     .del()
